@@ -8,15 +8,12 @@ import glob
 
 import os, sys
 
-subfolders = [ f.path for f in os.scandir("input") if f.is_dir() ]
+#subfolders = [ f.path for f in os.scandir("input") if f.is_dir() ]
 
-for folder in subfolders:
+for folder in next(os.walk('input'))[1]:
 	print(folder)
-	name = folder.split("/")[1]
 
-	print(name)
-
-	list_im = sorted(glob.glob(f"{folder}/*.png"),reverse=True)
+	list_im = sorted(glob.glob(f"input/{folder}/*.png"),reverse=True)
 	imgs    = [ PIL.Image.open(i) for i in list_im ]
 
 	print(f"Pictures in Folder: {len(list_im)}")
@@ -24,7 +21,7 @@ for folder in subfolders:
 	lines = len(list_im) // 6
 	print(f"Lines: {lines}")
 
-	outputFolder = f'output/{name}'
+	outputFolder = f'output/{folder}'
 
 	# Check whether the specified path exists or not
 	isExist = os.path.exists(outputFolder)
@@ -47,7 +44,7 @@ for folder in subfolders:
 		new_im.paste(temp, (x, y))
 		y += 544
 	
-	new_im.save( f'{outputFolder}/{name}_preview.png' )
+	new_im.save( f'{outputFolder}/{folder}_preview.png' )
 
 	temp = Image.open("template/6er maske.png")
 
@@ -75,19 +72,19 @@ for folder in subfolders:
 
 		cnt += 1
 
-	new_im.save( f'{outputFolder}/{name}_background.png' )
+	new_im.save( f'{outputFolder}/{folder}_background.png' )
 
 	# Opening the primary image (used in background)
-	img1 = Image.open(f"{outputFolder}/{name}_background.png")
+	img1 = Image.open(f"{outputFolder}/{folder}_background.png")
 	
 	# Opening the secondary image (overlay image)
-	img2 = Image.open( f'{outputFolder}/{name}_preview.png' )
+	img2 = Image.open( f'{outputFolder}/{folder}_preview.png' )
 	
 	# Pasting img2 image on top of img1 
 	# starting at coordinates (0, 0)
 	img1.paste(img2, (0,0), mask = img2)
 
-	img1.save( f'{outputFolder}/{name}_preview.png' )
+	img1.save( f'{outputFolder}/{folder}_preview.png' )
 
-	os.remove(f"{outputFolder}/{name}_background.png")
+	os.remove(f"{outputFolder}/{folder}_background.png")
 
