@@ -13,7 +13,7 @@ import os, sys
 for folder in next(os.walk('input'))[1]:
 	print(folder)
 
-	list_im = sorted(glob.glob(f"input/{folder}/*.png"),reverse=True)
+	list_im = sorted(glob.glob(f"input/{folder}/*"),reverse=True)
 	imgs    = [ PIL.Image.open(i) for i in list_im ]
 
 	print(f"Pictures in Folder: {len(list_im)}")
