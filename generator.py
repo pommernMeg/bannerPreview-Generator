@@ -8,12 +8,33 @@ import glob
 
 import os, sys
 
-#subfolders = [ f.path for f in os.scandir("input") if f.is_dir() ]
+
+final_size = 512
+
+def resize_aspect_fit(folder):
+
+	path = f"{os.getcwd()}/input/{folder}/"
+	dirs = os.listdir( path )
+	for item in dirs:
+         if item == '.DS_Store':
+             continue
+         if os.path.isfile(path+item):
+             im = Image.open(path+item)
+             f, e = os.path.splitext(path+item)
+             size = im.size
+             ratio = float(final_size) / size[0]
+             new_image_size = tuple([int(x*ratio) for x in size])
+             im = im.resize([new_image_size[0], new_image_size[1] ], Image.ANTIALIAS)
+             new_im = Image.new("RGBA", [new_image_size[0], new_image_size[1]])
+             new_im.paste(im, (0,0))
+             new_im.save(f + 'resized.png', 'PNG', quality=100)
 
 for folder in next(os.walk('input'))[1]:
 	print(folder)
 
-	list_im = sorted(glob.glob(f"input/{folder}/*"),reverse=True)
+	resize_aspect_fit(folder)
+
+	list_im = sorted(glob.glob(f"input/{folder}/*resized.png"),reverse=True)
 	imgs    = [ PIL.Image.open(i) for i in list_im ]
 
 	print(f"Pictures in Folder: {len(list_im)}")
