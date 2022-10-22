@@ -156,6 +156,9 @@ def main():
 
 			if( scale != 100):
 				resize_preview( outputFolder, folder , scale )
+			else:
+				subprocess.run(f"mv {outputFolder}/{folder}_preview.png input/{folder}/", shell=True)
+				
 
 if __name__ == "__main__":
 	main()
